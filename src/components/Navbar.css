@@ -27,6 +27,7 @@
   font-weight: 600;
   color: #ff4b2b;
   margin-right: 20px;
+  text-decoration: none;
 }
 
 /* ==== Menu ==== */
@@ -66,7 +67,7 @@
   padding: 10px 30px;
 }
 
-/* ==== Toggle Icon Animado (Hamburger) ==== */
+/* ==== Toggle Icon (Hamburger) ==== */
 .menu-toggle-icon {
   display: none;
   width: 30px;
@@ -86,15 +87,9 @@
   transition: all 0.3s ease;
 }
 
-.menu-toggle-icon span:nth-child(1) {
-  top: 0;
-}
-.menu-toggle-icon span:nth-child(2) {
-  top: 9px;
-}
-.menu-toggle-icon span:nth-child(3) {
-  top: 18px;
-}
+.menu-toggle-icon span:nth-child(1) { top: 0; }
+.menu-toggle-icon span:nth-child(2) { top: 9px; }
+.menu-toggle-icon span:nth-child(3) { top: 18px; }
 
 .menu-toggle-icon.open span:nth-child(1) {
   transform: rotate(45deg);
@@ -108,7 +103,32 @@
   top: 9px;
 }
 
-/* ==== Responsive ==== */
+/* Ícono de login (versión desktop) */
+.login-icon {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.login-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Ocultar ícono en mobile */
+@media (max-width: 768px) {
+  .login-icon {
+    display: none;
+  }
+}
+
+/* ==== Responsive Navbar Menu ==== */
 @media (max-width: 768px) {
   .menu-toggle-icon {
     display: block;
@@ -154,4 +174,41 @@
   .navbar__menu a:hover {
     background-color: rgba(255, 75, 43, 0.05);
   }
+
+@media (max-width: 768px) {
+  .login-menu-item button {
+    all: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .login-menu-item button:hover {
+    color: #ff4b2b;
+  }
+}
+
+  .login-menu-item span {
+    display: inline-block;
+  }
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  opacity: 0.8;
 }

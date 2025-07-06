@@ -1,17 +1,46 @@
-import { useEffect, useState } from 'react';
-import './Navbar.css';
+import { useEffect, useState } from "react";
+import { FiUser, FiLogOut } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { verificarSesion, logout } from "../services/authService";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [usuario, setUsuario] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 80);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const verificar = async () => {
+      try {
+        const user = await verificarSesion();
+        setUsuario(user);
+      } catch {
+        setUsuario(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    verificar();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setUsuario(null);
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error al cerrar sesión", error);
+    }
+  };
 
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
@@ -20,12 +49,14 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`navbar ${scrolled ? 'navbar--floating' : ''}`}>
+    <nav className={`navbar ${scrolled ? "navbar--floating" : ""}`}>
       <div className="navbar__container">
-        <div className="logo">BoostMedia</div>
+        <Link to="/" className="logo">
+          BoostMedia
+        </Link>
 
         <div
-          className={`menu-toggle-icon ${menuOpen ? 'open' : ''}`}
+          className={`menu-toggle-icon ${menuOpen ? "open" : ""}`}
           onClick={() => setMenuOpen(!menuOpen)}
         >
           <span />
@@ -33,12 +64,44 @@ const Navbar = () => {
           <span />
         </div>
 
-        <ul className={`navbar__menu ${menuOpen ? 'open' : ''}`}>
-          <li><a href="#services" onClick={handleLinkClick}>Servicios</a></li>
-          <li><a href="#why" onClick={handleLinkClick}>¿Por qué nosotros?</a></li>
-          <li><a href="#testimonials" onClick={handleLinkClick}>Clientes</a></li>
-          <li><a href="#contact" onClick={handleLinkClick}>Contacto</a></li>
-        </ul>
+        <div className={`navbar__right ${menuOpen ? "open" : ""}`}>
+          <ul className={`navbar__menu ${menuOpen ? "open" : ""}`}>
+            {!usuario && !loading && (
+              <>
+                <li>
+                  <a href="#services" onClick={handleLinkClick}>Servicios</a>
+                </li>
+                <li>
+                  <a href="#why" onClick={handleLinkClick}>¿Por qué nosotros?</a>
+                </li>
+                <li>
+                  <a href="#testimonials" onClick={handleLinkClick}>Clientes</a>
+                </li>
+                <li>
+                  <a href="#contact" onClick={handleLinkClick}>Contacto</a>
+                </li>
+              </>
+            )}
+
+            {!loading && (
+              <li className="login-menu-item">
+                {usuario ? (
+                  <button className="login-icon" onClick={handleLogout}>
+                    <FiLogOut size={20} color="red" />
+                    <span style={{ marginLeft: "6px", color: "red" }}>Cerrar sesión</span>
+                  </button>
+                ) : (
+                  <button
+                    className="login-icon"
+                    onClick={() => (window.location.href = "/login")}
+                  >
+                    <FiUser size={20} />
+                  </button>
+                )}
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
     </nav>
   );

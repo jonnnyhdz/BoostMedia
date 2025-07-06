@@ -22,39 +22,49 @@ const ContactForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!captchaToken) {
-      setStatus('Completa el reCAPTCHA antes de enviar.');
-      return;
-    }
+  if (!captchaToken) {
+    setStatus('Completa el reCAPTCHA antes de enviar.');
+    return;
+  }
 
-    if (!aceptaAviso) {
-      setStatus('Debes aceptar el aviso de privacidad.');
-      return;
-    }
+  if (!aceptaAviso) {
+    setStatus('Debes aceptar el aviso de privacidad.');
+    return;
+  }
 
-    setLoading(true);
-    try {
-      await enviarFormularioContacto({
-        nombre: formData.nombre,
-        correo: formData.correo,
-        telefono: formData.telefono,
-        mensaje: formData.mensaje,
-        captcha: captchaToken, // 👈 Aquí el nombre correcto
-      });
+  // 🔐 Sanitizar inputs
+const nombre = formData.nombre.trim().replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const correo = formData.correo.trim();
+const telefono = formData.telefono.trim().replace(/[^\d+]/g, '');
+const mensaje = formData.mensaje.trim().replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-      setStatus('¡Gracias por contactarnos! Te responderemos pronto.');
-      setFormData({ nombre: '', correo: '', telefono: '', mensaje: '' });
-      setAceptaAviso(false);
-      setCaptchaToken(null);
-      captchaRef.current.reset(); // ✅ Reset visual del captcha
-    } catch (error) {
-      setStatus('Hubo un error al enviar el formulario. Intenta nuevamente.');
-    } finally {
-      setLoading(false);
-    }
-  };
+const payload = {
+  name: nombre,
+  gmail: correo,
+  phone: telefono,
+  message: mensaje,
+  captcha: captchaToken,
+  aceptaTerminos: aceptaAviso === true
+};
+
+
+  setLoading(true);
+  try {
+    await enviarFormularioContacto(payload);
+    setStatus('¡Gracias por contactarnos! Te responderemos pronto.');
+    setFormData({ nombre: '', correo: '', telefono: '', mensaje: '' });
+    setAceptaAviso(false);
+    setCaptchaToken(null);
+    captchaRef.current.reset(); 
+  } catch (error) {
+    setStatus('Hubo un error al enviar el formulario. Intenta nuevamente.');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <section className="contact-section" id="contact">
