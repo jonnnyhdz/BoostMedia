@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // Leer la URL base desde .env
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:3000';
+console.log("API_BASE:", API_BASE);
 
 /**
  * Envía el formulario de contacto

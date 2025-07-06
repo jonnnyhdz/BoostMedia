@@ -1,6 +1,7 @@
 // src/services/authService.js
 
 const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:3000';
+console.log("API_BASE:", API_BASE);
 
 export const login = async (credentials) => {
   const res = await fetch(`${API_BASE}/api/auth/login`, {
