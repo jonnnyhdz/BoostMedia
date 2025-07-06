@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiUser, FiLogOut } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // 👈 agregado useNavigate
 import { verificarSesion, logout } from "../services/authService";
 import "./Navbar.css";
 
@@ -9,6 +9,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // 👈 inicializa navegación
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +37,7 @@ const Navbar = () => {
     try {
       await logout();
       setUsuario(null);
-      window.location.href = "/";
+      navigate("/"); // 👈 redirección sin recargar
     } catch (error) {
       console.error("Error al cerrar sesión", error);
     }
@@ -93,7 +94,7 @@ const Navbar = () => {
                 ) : (
                   <button
                     className="login-icon"
-                    onClick={() => (window.location.href = "/login")}
+                    onClick={() => navigate("/login")} // 👈 navegación sin recargar
                   >
                     <FiUser size={20} />
                   </button>
