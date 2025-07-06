@@ -11,7 +11,7 @@ import {
 const ITEMS_PER_PAGE = 6;
 
 const Dashboard = () => {
-  const [leads, setLeads] = useState([]);
+  const [, setLeads] = useState([]);
   const [search, setSearch] = useState({ name: "", gmail: "" });
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
